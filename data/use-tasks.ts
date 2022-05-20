@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api';
 import { useQuery } from 'react-query';
 
-export type ITask = { pid: number; name: string; cpu_usage: number };
+export type ITask = { pid: string; name: string; cpu_usage: number; parent_pid?: string; exe: string };
 
 export const useTasks = () => {
   return useQuery('tasks', async () => {
