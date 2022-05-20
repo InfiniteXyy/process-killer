@@ -3,6 +3,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require('tailwindcss-iconify').default()],
+  plugins: [require('tailwindcss-iconify').default(), require('tailwind-scrollbar')],
   darkMode: 'class',
 };

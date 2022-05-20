@@ -1,16 +1,23 @@
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
-import Layout from '../components/layout';
+import dynamic from 'next/dynamic';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { useIsServer } from '~/hooks';
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
+const Layout = dynamic(() => import('~/components/layout'), { ssr: false });
+
+export default function App({ Component, pageProps }: AppProps) {
+  const isServer = useIsServer();
+  const [client] = useState(() => new QueryClient({}));
+  if (isServer) return null;
   return (
     <ThemeProvider defaultTheme="system" attribute="class">
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <QueryClientProvider client={client}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
-
-export default MyApp;
