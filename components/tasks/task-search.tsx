@@ -7,7 +7,7 @@ export function TaskSearch() {
       <input
         value={keyword}
         onChange={(e) => useTasksStore.setState({ searchParams: { keyword: e.target.value } })}
-        className="w-full bg-transparent px-4 pb-2 outline-none"
+        className="w-full bg-transparent px-5 pt-1 pb-2 outline-none"
         placeholder="Please type in something"
       />
       <div className="h-[1px] w-full bg-neutral-200 transition dark:bg-neutral-800" />

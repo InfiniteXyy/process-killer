@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "xyz.xyynext.process-killer",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -56,10 +56,11 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
+        "height": 500,
+        "center": true,
+        "resizable": false,
         "title": "process-killer",
-        "width": 800,
+        "width": 650,
         "decorations": false,
         "transparent": true
       }

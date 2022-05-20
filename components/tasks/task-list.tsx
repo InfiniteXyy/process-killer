@@ -1,30 +1,25 @@
-import { useTasks } from '~/data';
+import { useComputedTasks } from '~/data';
 import { useTasksStore } from './store';
 import { TaskItem } from './task-item';
 
 export function TaskList() {
-  const { data: tasks } = useTasks();
+  const tasks = useComputedTasks();
   const { keyword } = useTasksStore().searchParams;
 
   const filteredTasks = useMemo(() => {
-    const pidSet = new Set(tasks?.map((i) => i.pid));
-    return (
-      tasks
-        ?.filter((task) => task.name.includes(keyword) || task.pid.includes(keyword))
-        .filter((i) => !!i.parent_pid && !pidSet.has(i.parent_pid))
-        .sort((a, b) => (a.name > b.name ? -1 : 1)) ?? []
-    );
+    if (keyword.startsWith(':')) {
+      const port = keyword.slice(1);
+      return tasks.filter((task) => task.ports?.some((i) => i.local_port.includes(port)));
+    } else {
+      return tasks.filter((task) => task.name.includes(keyword) || String(task.pid).includes(keyword));
+    }
   }, [keyword, tasks]);
 
-  console.log(filteredTasks);
-
   return (
-    <ul className="overflow-auto p-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700">
+    <div className="space-y-2 overflow-auto p-3 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700">
       {filteredTasks.map((i) => (
-        <li key={i.pid}>
-          <TaskItem task={i} />
-        </li>
+        <TaskItem key={i.pid} task={i} />
       ))}
-    </ul>
+    </div>
   );
 }

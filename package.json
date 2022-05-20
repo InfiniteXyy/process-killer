@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export && tauri build",
     "start": "next start",
     "lint": "next lint",
     "update:deps": "taze -w"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.2",
     "@tauri-apps/api": "^1.0.0-rc.5",
+    "@tippyjs/react": "^4.2.6",
+    "clsx": "^1.1.1",
+    "lodash": "^4.17.21",
     "next": "12.1.6",
     "next-themes": "^0.2.0",
     "react": "18.1.0",
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@iconify/json": "^2.1.47",
     "@tauri-apps/cli": "^1.0.0-rc.11",
+    "@types/lodash": "^4.14.182",
     "@types/node": "17.0.33",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.4",
