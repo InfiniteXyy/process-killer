@@ -17,6 +17,6 @@ icon related lib
 - [x] a11y, keyboard support
 - [x] improve perf, virtual list?
 - [x] Support Exe Icons
-- [ ] App Icon
-- [ ] i18n
+- [x] App Icon
+- [x] i18n
 - [ ] merge related processes

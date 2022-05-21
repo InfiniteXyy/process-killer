@@ -1,5 +1,5 @@
 import { window } from '@tauri-apps/api';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import create from 'zustand';
 

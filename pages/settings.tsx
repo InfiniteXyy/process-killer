@@ -1,18 +1,15 @@
-import { GetStaticProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
-
-export const getStaticProps: GetStaticProps = async ({ locale = 'zh' }) => {
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-    },
-  };
-};
+import Head from 'next/head';
 
 const Settings = dynamic(() => import('~/components/settings'), { ssr: false });
 
 export default function SettingsPage() {
-  return <Settings />;
+  return (
+    <>
+      <Head>
+        <title>Process Killer - Settings</title>
+      </Head>
+      <Settings />
+    </>
+  );
 }

@@ -1,17 +1,15 @@
-import { GetStaticProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
-
-export const getStaticProps: GetStaticProps = async ({ locale = 'zh' }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-    },
-  };
-};
 
 const App = dynamic(() => import('~/components/app'), { ssr: false });
 
 export default function IndexPage() {
-  return <App />;
+  return (
+    <>
+      <Head>
+        <title>Process Killer</title>
+      </Head>
+      <App />
+    </>
+  );
 }
