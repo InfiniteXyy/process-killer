@@ -8,7 +8,7 @@ export interface ITask {
   cpu_usage: number;
   parent_pid?: number;
   exe: string;
-  children?: ITask[];
+  parent?: ITask;
 }
 
 interface WithPort extends ITask {
@@ -22,10 +22,12 @@ export const useTasks = () => {
     'tasks',
     async () => {
       const tasks = await invoke<ITask[]>('get_process_list');
-      return tasks.sort((a, b) => {
-        if (a.name === b.name) return a.pid < b.pid ? -1 : 1;
-        return a.name > b.name ? -1 : 1;
-      });
+      return tasks
+        .sort((a, b) => {
+          if (a.name === b.name) return a.pid < b.pid ? -1 : 1;
+          return a.name > b.name ? -1 : 1;
+        })
+        .map((i) => ({ ...i, parent: tasks.find((j) => j.pid === i.parent_pid) }));
     },
     { refetchInterval: 10000 }
   );

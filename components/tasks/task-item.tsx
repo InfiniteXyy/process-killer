@@ -1,9 +1,10 @@
 import Tippy from '@tippyjs/react';
 import clsx from 'clsx';
 import { uniqBy } from 'lodash';
+import Image from 'next/image';
 import { memo } from 'react';
 import 'tippy.js/dist/tippy.css';
-import { IComputedTask } from '~/data';
+import { IComputedTask, useFileIcon } from '~/data';
 import { openKillConfirm } from './modal-kill-confirm';
 import { useTasksStore } from './store';
 
@@ -16,6 +17,7 @@ export const TaskItem = memo(function TaskItem(props: TaskItemProps) {
   const { task, index } = props;
   const { activeIndex } = useTasksStore();
   const cpuUsage = Math.floor(task.cpu_usage * 100) / 100;
+  const { data: icon } = useFileIcon(task);
 
   // Listened TCP, or UDP connections
   const listenedPorts = useMemo(() => {
@@ -35,9 +37,15 @@ export const TaskItem = memo(function TaskItem(props: TaskItemProps) {
       )}
     >
       <div className="flex items-center space-x-2 overflow-hidden">
-        <div className="grid h-6 w-6 flex-shrink-0 place-items-center rounded-lg bg-neutral-300 text-xs font-medium text-neutral-500 dark:text-neutral-700">
-          {task.name[0].toUpperCase()}
-        </div>
+        {icon ? (
+          <div
+            style={{ backgroundImage: `url(data:image/png;base64,${icon})` }}
+            className="h-6 w-6 bg-contain"
+          />
+        ) : (
+          <Image width={24} height={24} src="/default-icon.png" alt="default-icon" />
+        )}
+
         <span>{task.name}</span>
         <small className="ml-2 text-xs opacity-30">pid: {task.pid}</small>
       </div>

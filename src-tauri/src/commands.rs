@@ -1,6 +1,6 @@
 use netstat2::{get_sockets_info, AddressFamilyFlags, ProtocolFlags, ProtocolSocketInfo};
 use serde::Serialize;
-use sysinfo::{Pid, PidExt, System, SystemExt, ProcessExt};
+use sysinfo::{Pid, PidExt, ProcessExt, System, SystemExt};
 
 #[derive(Serialize)]
 pub struct ProcessInfo {
