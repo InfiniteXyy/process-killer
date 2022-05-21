@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [client] = useState(() => new QueryClient({}));
   if (isServer) return null;
   return (
-    <ThemeProvider defaultTheme="system" attribute="class">
+    <ThemeProvider enableSystem={true} attribute="class">
       <QueryClientProvider client={client}>
         <Layout>
           <GLobalPortal />

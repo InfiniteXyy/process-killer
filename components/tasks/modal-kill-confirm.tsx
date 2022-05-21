@@ -17,7 +17,7 @@ function KillConfirmModal(props: { task: ITask }) {
         <p className="text-sm text-stone-500">
           Are you sure to kill <span className="font-bold text-stone-700">{task.name}</span> ?
         </p>
-        <p className="mt-2 text-sm italic text-stone-400">{task.exe}</p>
+        <p className="mt-2 break-all text-sm italic text-stone-400">{task.exe}</p>
       </div>
 
       <div className="mt-4 flex justify-end">
