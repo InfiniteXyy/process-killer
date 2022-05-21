@@ -13,10 +13,13 @@ icon related lib
 - https://github.com/sindresorhus/file-icon
 
 # TODO
-- [ ] make intro page
+- [x] make intro page
 - [x] a11y, keyboard support
 - [x] improve perf, virtual list?
 - [x] Support Exe Icons
 - [x] App Icon
 - [x] i18n
+- [ ] set revalidate interval
 - [ ] merge related processes
+- [ ] improve wix install experience
+- [ ] add license page
