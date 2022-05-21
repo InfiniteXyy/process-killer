@@ -12,11 +12,11 @@ export function TaskList() {
 
   const filteredTasks = useMemo(() => {
     if (deferredKeyword.startsWith(':')) {
-      const re = new RegExp(deferredKeyword.slice(1), 'i');
-      return tasks.filter((task) => task.ports?.some((port) => re.test(port.local_port)));
+      const k = deferredKeyword.slice(1);
+      return tasks.filter((task) => task.ports?.some((port) => port.local_port.includes(k)));
     } else {
-      const re = new RegExp(deferredKeyword, 'i');
-      return tasks.filter((task) => re.test(task.name) || re.test(String(task.pid)));
+      const k = deferredKeyword.toLowerCase();
+      return tasks.filter((task) => task.name.toLowerCase().includes(k) || String(task.pid).includes(k));
     }
   }, [deferredKeyword, tasks]);
 
