@@ -1,25 +1,26 @@
+import { appWithTranslation, useTranslation } from 'next-i18next';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { GLobalPortal } from '~/components/ui';
-import { useIsServer } from '~/hooks';
+import { useGlobalStore, usePreventContextMenu } from '~/hooks';
 import '../styles/globals.css';
 
 const Layout = dynamic(() => import('~/components/layout'), { ssr: false });
 
-export default function App({ Component, pageProps }: AppProps) {
-  const isServer = useIsServer();
+function App({ Component, pageProps }: AppProps) {
   const [client] = useState(() => new QueryClient({}));
-
+  const { i18n } = useTranslation();
+  const { locale } = useGlobalStore();
+  usePreventContextMenu();
+  
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') return;
-    const onContextMenuClick = (e: MouseEvent) => e.preventDefault();
-    document.addEventListener('contextmenu', onContextMenuClick);
-    return () => document.removeEventListener('contextmenu', onContextMenuClick);
-  }, []);
+    if (locale) {
+      i18n.changeLanguage(locale);
+    }
+  }, [i18n, locale]);
 
-  if (isServer) return null;
   return (
     <ThemeProvider enableSystem={true} attribute="class">
       <QueryClientProvider client={client}>
@@ -31,3 +32,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </ThemeProvider>
   );
 }
+
+export default appWithTranslation(App);

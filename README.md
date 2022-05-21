@@ -14,6 +14,9 @@ icon related lib
 
 # TODO
 - [ ] make intro page
-- [ ] a11y, keyboard support
-- [ ] improve perf, virtual list?
+- [x] a11y, keyboard support
+- [x] improve perf, virtual list?
+- [x] Support Exe Icons
+- [ ] App Icon
+- [ ] i18n
 - [ ] merge related processes

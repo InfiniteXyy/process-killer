@@ -3,6 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
 
 export const getStaticProps: GetStaticProps = async ({ locale = 'zh' }) => {
+
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),
@@ -10,8 +11,8 @@ export const getStaticProps: GetStaticProps = async ({ locale = 'zh' }) => {
   };
 };
 
-const App = dynamic(() => import('~/components/app'), { ssr: false });
+const Settings = dynamic(() => import('~/components/settings'), { ssr: false });
 
-export default function IndexPage() {
-  return <App />;
+export default function SettingsPage() {
+  return <Settings />;
 }

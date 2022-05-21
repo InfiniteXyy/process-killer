@@ -1,14 +1,16 @@
+import { useTranslation } from 'next-i18next';
 import { useTasksStore } from './store';
 
 export function TaskSearch() {
   const { keyword } = useTasksStore();
+  const { t } = useTranslation('common');
   return (
     <div>
       <input
         value={keyword}
         onChange={(e) => useTasksStore.setState({ keyword: e.target.value })}
         className="w-full bg-transparent px-5 pt-1 pb-2 outline-none"
-        placeholder="[Keywords/Pid] or [:Port]"
+        placeholder={t('keyword_placeholder')}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"

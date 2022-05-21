@@ -28,7 +28,7 @@ export const TaskItem = memo(function TaskItem(props: TaskItemProps) {
       onMouseEnter={() => useTasksStore.setState({ activeIndex: index })}
       onClick={() => openKillConfirm({ task })}
       className={clsx(
-        activeIndex === index && 'bg-stone-200 dark:bg-stone-900',
+        activeIndex === index && 'bg-gray-200 active:bg-gray-300 dark:bg-gray-900 dark:active:bg-gray-800',
         'my-1 flex w-full items-center justify-between gap-2 rounded-lg p-2 outline-none'
       )}
     >

@@ -7,14 +7,15 @@ interface ModalProps {
   afterClose?: () => void;
   title: string;
   children: React.ReactNode;
+  initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
 export function Modal(props: ModalProps) {
-  const { visible, onClose, afterClose, title, children } = props;
+  const { visible, onClose, afterClose, title, children, initialFocusRef } = props;
 
   return (
     <Transition appear show={visible} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-10" onClose={onClose} initialFocus={initialFocusRef}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -40,7 +41,7 @@ export function Modal(props: ModalProps) {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-stone-900">
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
                   {title}
                 </Dialog.Title>
                 {children}
