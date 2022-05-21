@@ -21,6 +21,7 @@ function KillConfirmModal(props: { task: ITask }) {
       <div className="mt-2">
         <p className="text-sm text-gray-500">
           <Trans
+            ns="common"
             i18nKey="sure_to_kill_process"
             values={{ name: task.name }}
             components={{ b: <strong className="font-bold text-gray-700" /> }}

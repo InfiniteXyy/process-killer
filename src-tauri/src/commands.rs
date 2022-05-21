@@ -1,6 +1,7 @@
 use netstat2::{get_sockets_info, AddressFamilyFlags, ProtocolFlags, ProtocolSocketInfo};
 use serde::Serialize;
 use sysinfo::{Pid, PidExt, ProcessExt, System, SystemExt};
+use tauri::Manager;
 
 #[derive(Serialize)]
 pub struct ProcessInfo {
@@ -71,4 +72,14 @@ pub fn kill_process(_window: tauri::Window, pid: u32) -> bool {
         return result;
     }
     false
+}
+
+#[tauri::command]
+pub async fn close_splashscreen(window: tauri::Window) {
+    // Close splashscreen
+    if let Some(splashscreen) = window.get_window("splash") {
+        splashscreen.close().unwrap();
+    }
+    // Show main window
+    window.get_window("main").unwrap().show().unwrap();
 }

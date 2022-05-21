@@ -4,7 +4,7 @@
 )]
 
 mod commands;
-use commands::{get_port_list, get_process_list, kill_process};
+use commands::{close_splashscreen, get_port_list, get_process_list, kill_process};
 use tauri::{Menu, MenuItem, Submenu};
 
 fn main() {
@@ -22,12 +22,16 @@ fn main() {
 
     let menu = Menu::new().add_submenu(edit_menu);
 
-    tauri::Builder::default()
-        .menu(menu)
+    let mut builder = tauri::Builder::default();
+    if cfg!(target_os = "macos") {
+        builder = builder.menu(menu)
+    }
+    builder
         .invoke_handler(tauri::generate_handler![
             get_process_list,
             kill_process,
-            get_port_list
+            get_port_list,
+            close_splashscreen,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
