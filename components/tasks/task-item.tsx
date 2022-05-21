@@ -27,18 +27,18 @@ export const TaskItem = memo(function TaskItem(props: TaskItemProps) {
 
   return (
     <div
-      onMouseOver={() => useTasksStore.setState({ activeIndex: index })}
+      onMouseEnter={() => useTasksStore.setState({ activeIndex: index })}
       onClick={() => openKillConfirm({ task })}
       className={clsx(
         activeIndex === index && 'bg-stone-200 dark:bg-stone-900',
-        'my-1 mr-2 flex items-center justify-between gap-2 rounded-lg p-2'
+        'my-1 flex w-full items-center justify-between gap-2 rounded-lg p-2 outline-none'
       )}
     >
       <div className="flex items-center space-x-2 overflow-hidden">
         <div className="grid h-6 w-6 flex-shrink-0 place-items-center rounded-lg bg-neutral-300 text-xs font-medium text-neutral-500 dark:text-neutral-700">
           {task.name[0].toUpperCase()}
         </div>
-        <span className="font-medium">{task.name}</span>
+        <span>{task.name}</span>
         <small className="ml-2 text-xs opacity-30">pid: {task.pid}</small>
       </div>
       <div className="flex items-center space-x-2 overflow-hidden text-sm text-neutral-400">

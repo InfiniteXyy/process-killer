@@ -11,6 +11,7 @@ const Layout = dynamic(() => import('~/components/layout'), { ssr: false });
 export default function App({ Component, pageProps }: AppProps) {
   const isServer = useIsServer();
   const [client] = useState(() => new QueryClient({}));
+
   if (isServer) return null;
   return (
     <ThemeProvider enableSystem={true} attribute="class">

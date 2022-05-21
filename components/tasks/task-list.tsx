@@ -1,5 +1,6 @@
 import { useVirtual } from 'react-virtual';
 import { useComputedTasks } from '~/data';
+import { openKillConfirm } from './modal-kill-confirm';
 import { useTasksStore } from './store';
 import { TaskItem } from './task-item';
 
@@ -11,42 +12,42 @@ export function TaskList() {
 
   const filteredTasks = useMemo(() => {
     if (deferredKeyword.startsWith(':')) {
-      const port = deferredKeyword.slice(1);
-      return tasks.filter((task) => task.ports?.some((i) => i.local_port.includes(port)));
+      const re = new RegExp(deferredKeyword.slice(1), 'i');
+      return tasks.filter((task) => task.ports?.some((port) => re.test(port.local_port)));
     } else {
-      return tasks.filter((task) => task.name.includes(deferredKeyword) || String(task.pid).includes(deferredKeyword));
+      const re = new RegExp(deferredKeyword, 'i');
+      return tasks.filter((task) => re.test(task.name) || re.test(String(task.pid)));
     }
   }, [deferredKeyword, tasks]);
 
   const rowVirtualizer = useVirtual({
     size: filteredTasks.length,
     parentRef,
-    estimateSize: useCallback(() => 40, []),
+    estimateSize: useCallback(() => 50, []),
   });
   const { scrollToIndex } = rowVirtualizer;
 
   useEffect(() => {
     const onKeydownEvent = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowUp') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         e.preventDefault();
-        useTasksStore.setState((s) => {
-          const nextIndex = Math.max(s.activeIndex - 1, 0);
+        useTasksStore.setState(({ activeIndex }) => {
+          const offset = e.key === 'ArrowUp' ? -1 : 1;
+          const nextIndex = (activeIndex + offset + filteredTasks.length) % filteredTasks.length;
           scrollToIndex(nextIndex);
-          return { ...s, activeIndex: nextIndex };
+          return { activeIndex: nextIndex };
         });
       }
-      if (e.key === 'ArrowDown') {
+      if (e.key === 'Enter') {
+        if (e.target instanceof HTMLButtonElement) return;
         e.preventDefault();
-        useTasksStore.setState((s) => {
-          const nextIndex = Math.min(s.activeIndex + 1, filteredTasks.length - 1);
-          scrollToIndex(nextIndex);
-          return { ...s, activeIndex: nextIndex };
-        });
+        const task = filteredTasks[useTasksStore.getState().activeIndex];
+        task && openKillConfirm({ task });
       }
     };
     document.addEventListener('keydown', onKeydownEvent);
     return () => document.removeEventListener('keydown', onKeydownEvent);
-  }, [filteredTasks.length, scrollToIndex]);
+  }, [filteredTasks, scrollToIndex]);
 
   return (
     <div

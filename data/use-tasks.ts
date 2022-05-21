@@ -22,7 +22,10 @@ export const useTasks = () => {
     'tasks',
     async () => {
       const tasks = await invoke<ITask[]>('get_process_list');
-      return tasks.sort((a, b) => (a.name > b.name ? -1 : 1));
+      return tasks.sort((a, b) => {
+        if (a.name === b.name) return a.pid < b.pid ? -1 : 1;
+        return a.name > b.name ? -1 : 1;
+      });
     },
     { refetchInterval: 10000 }
   );
