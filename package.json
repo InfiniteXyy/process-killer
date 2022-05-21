@@ -7,7 +7,8 @@
     "build": "next build && next export && tauri build",
     "start": "next start",
     "lint": "next lint",
-    "update:deps": "taze -w"
+    "update:deps": "taze -w",
+    "build:icons": "npx @tauri-apps/tauricon ./src-tauri/icon.png"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.2",
