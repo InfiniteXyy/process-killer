@@ -8,7 +8,7 @@ export function TaskSearch() {
         value={keyword}
         onChange={(e) => useTasksStore.setState({ keyword: e.target.value })}
         className="w-full bg-transparent px-5 pt-1 pb-2 outline-none"
-        placeholder="Please type in something"
+        placeholder="Keywords / Pid / Ports by starting with ':'"
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"

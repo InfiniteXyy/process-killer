@@ -25,7 +25,7 @@ export const useTasks = () => {
       return tasks
         .sort((a, b) => {
           if (a.name === b.name) return a.pid < b.pid ? -1 : 1;
-          return a.name > b.name ? -1 : 1;
+          return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
         })
         .map((i) => ({ ...i, parent: tasks.find((j) => j.pid === i.parent_pid) }));
     },

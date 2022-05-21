@@ -1,14 +1,15 @@
 import { os, shell } from '@tauri-apps/api';
 import { memoize } from 'lodash';
 import { useQuery } from 'react-query';
+import { defaultFileIconData } from './default-file-icon';
 import { ITask } from './use-tasks';
 
 const getIconByPid = memoize(
-  async (task: ITask): Promise<string | null> => {
+  async (task: ITask): Promise<string> => {
     const arg = JSON.stringify([{ appOrPID: String(task.pid), size: 64, encode: true }]);
     const command = shell.Command.sidecar('vendor/file-icon', arg);
     const result = await command.execute();
-    if (result.stderr) return task.parent ? getIconByPid(task.parent) : null;
+    if (result.stderr) return task.parent ? getIconByPid(task.parent) : defaultFileIconData;
     return result.stdout;
   },
   (task) => task.pid
