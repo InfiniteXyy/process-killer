@@ -23,3 +23,5 @@ icon related lib
 - [ ] merge related processes
 - [ ] improve wix install experience
 - [ ] add license page
+- [ ] add ci, support window
+- [ ] multiple-selection
