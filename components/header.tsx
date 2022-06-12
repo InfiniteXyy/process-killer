@@ -1,6 +1,5 @@
-import { window } from '@tauri-apps/api';
-import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import create from 'zustand';
 
 const useTitleStore = create(() => ({ title: '' }));
@@ -13,10 +12,11 @@ export const useLayoutTitle = (title: string) => {
 };
 
 export function Header() {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const router = useRouter();
   const { title } = useTitleStore();
   const isInHomePage = router.pathname === '/';
+  if (isInHomePage) return null
   return (
     <header data-tauri-drag-region className="flex items-center space-x-2 py-2 pl-4 pr-2">
       <div
@@ -28,21 +28,6 @@ export function Header() {
       <nav className="pointer-events-none items-center space-x-2 overflow-hidden font-bold">
         <div className="overflow-hidden text-ellipsis whitespace-nowrap">{title || t('app_name')}</div>
       </nav>
-
-      <div className="flex flex-shrink-0 space-x-2" style={{ marginLeft: 'auto' }}>
-        <div
-          className="rounded p-1 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-          onClick={() => window.appWindow.minimize()}
-        >
-          <div className="i-[mdi-window-minimize]" />
-        </div>
-        <div
-          className="rounded p-1 hover:bg-neutral-200 hover:text-red-500 dark:hover:bg-neutral-600"
-          onClick={() => window.appWindow.close()}
-        >
-          <div className="i-[mdi-close]" />
-        </div>
-      </div>
     </header>
   );
 }

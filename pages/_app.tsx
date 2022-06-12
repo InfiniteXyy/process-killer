@@ -23,7 +23,7 @@ const Layout = dynamic(() => import('~/components/layout'), { ssr: false });
 function App({ Component, pageProps }: AppProps) {
   const [client] = useState(() => new QueryClient({}));
   const { i18n } = useTranslation();
-  const { locale } = useGlobalStore();
+  const { locale, darkMode } = useGlobalStore();
   usePreventContextMenu();
 
   useEffect(() => {
@@ -31,7 +31,11 @@ function App({ Component, pageProps }: AppProps) {
   }, [i18n, locale]);
 
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
+    <ThemeProvider
+      enableSystem={darkMode ? true : false}
+      forcedTheme={darkMode === 'on' ? 'dark' : darkMode === 'off' ? 'light' : undefined}
+      attribute="class"
+    >
       <QueryClientProvider client={client}>
         <Layout>
           <GLobalPortal />

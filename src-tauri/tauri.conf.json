@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "process-killer",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "tauri": {
     "macOSPrivateApi": true,
@@ -58,10 +58,9 @@
         "height": 500,
         "center": true,
         "resizable": false,
-        "title": "process-killer",
+        "title": "Process Killer",
         "width": 650,
-        "decorations": false,
-        "transparent": true
+        "alwaysOnTop": false
       }
     ]
   }

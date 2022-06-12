@@ -52,7 +52,7 @@ export function TaskList() {
   return (
     <div
       ref={parentRef}
-      className="overflow-auto px-3 py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700"
+      className="overflow-auto px-3 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-700"
     >
       <div className="relative" style={{ height: `${rowVirtualizer.totalSize}px` }}>
         {rowVirtualizer.virtualItems.map((virtualRow) => {

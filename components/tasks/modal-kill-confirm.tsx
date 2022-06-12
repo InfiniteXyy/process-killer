@@ -19,21 +19,21 @@ function KillConfirmModal(props: { task: ITask }) {
       initialFocusRef={initialFocusRef}
     >
       <div className="mt-2">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-neutral-500">
           <Trans
             ns="common"
             i18nKey="sure_to_kill_process"
             values={{ name: task.name }}
-            components={{ b: <strong className="font-bold text-gray-700" /> }}
+            components={{ b: <strong className="font-bold text-neutral-700" /> }}
           />
         </p>
-        <p className="mt-2 break-all text-sm italic text-gray-400">{task.exe}</p>
+        <p className="mt-2 break-all text-sm italic text-neutral-400">{task.exe}</p>
       </div>
 
       <div className="mt-4 flex justify-end space-x-4">
         <button
           type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-1 text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+          className="inline-flex justify-center rounded-md border border-transparent bg-neutral-100 px-4 py-1 text-sm font-medium text-neutral-900 hover:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2"
           onClick={() => setVisible(false)}
         >
           {t('cancel')}

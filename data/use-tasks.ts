@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api';
 import { useQuery } from 'react-query';
+import { useGlobalStore } from '~/hooks';
 import { IPort, usePorts } from './use-ports';
 
 export interface ITask {
@@ -18,6 +19,7 @@ interface WithPort extends ITask {
 export interface IComputedTask extends WithPort {}
 
 export const useTasks = () => {
+  const { revalidateInterval } = useGlobalStore();
   return useQuery(
     'tasks',
     async () => {
@@ -29,7 +31,7 @@ export const useTasks = () => {
         })
         .map((i) => ({ ...i, parent: tasks.find((j) => j.pid === i.parent_pid) }));
     },
-    { refetchInterval: 10000 }
+    { refetchInterval: revalidateInterval }
   );
 };
 
