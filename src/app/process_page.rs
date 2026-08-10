@@ -13,10 +13,15 @@ use super::{AppView, Page};
 use crate::system::{SortColumn, SortDirection, format_memory};
 
 impl AppView {
-    pub(super) fn render_processes(&mut self, cx: &mut Context<Self>) -> AnyElement {
+    pub(super) fn render_processes(
+        &mut self,
+        window: &Window,
+        cx: &mut Context<Self>,
+    ) -> AnyElement {
         let processes = self.filtered(cx);
         let count = processes.len();
         let active = self.active.min(count.saturating_sub(1));
+        let search_focused = self.search.focus_handle(cx).is_focused(window);
         self.active = active;
         let view = cx.entity();
 
@@ -57,7 +62,9 @@ impl AppView {
                     .h(px(30.))
                     .gap_1()
                     .text_xs()
-                    .text_color(cx.theme().muted_foreground)
+                    .rounded_lg()
+                    .bg(cx.theme().table_head)
+                    .text_color(cx.theme().table_head_foreground)
                     .child(self.sort_header(
                         "sort-process",
                         format!("{} ({count})", self.t("进程", "Process")),
@@ -119,8 +126,8 @@ impl AppView {
                                             .gap_2()
                                             .rounded_lg()
                                             .cursor_pointer()
-                                            .when(selected, |row| row.bg(cx.theme().secondary))
-                                            .hover(|row| row.bg(cx.theme().secondary_hover))
+                                            .when(selected, |row| row.bg(cx.theme().table_active))
+                                            .hover(|row| row.bg(cx.theme().table_hover))
                                             .on_hover(move |hovered, _, cx| {
                                                 if *hovered {
                                                     hover_view.update(cx, |this, cx| {
@@ -241,10 +248,10 @@ impl AppView {
             .gap_1()
             .rounded_md()
             .cursor_pointer()
-            .hover(|header| header.bg(cx.theme().secondary_hover))
+            .hover(|header| header.bg(cx.theme().table_hover))
             .when(selected, |header| {
                 header
-                    .bg(cx.theme().secondary)
+                    .bg(cx.theme().table_active)
                     .text_color(cx.theme().foreground)
             })
             .child(label.into())

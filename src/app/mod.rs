@@ -5,7 +5,7 @@ mod title_bar;
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
-    sync::{Arc, mpsc},
+    sync::{Arc, Mutex, mpsc},
     time::{Duration, Instant},
 };
 
@@ -70,14 +70,23 @@ impl AppView {
 
         let (icon_tx, worker_rx) = mpsc::channel::<(PathBuf, u32)>();
         let (worker_tx, icon_rx) = mpsc::channel();
-        std::thread::spawn(move || {
-            for (path, pid) in worker_rx {
-                let icon = extract_icon(&path, pid);
-                if worker_tx.send((path, icon)).is_err() {
-                    break;
+        let worker_rx = Arc::new(Mutex::new(worker_rx));
+        for _ in 0..10 {
+            let worker_rx = worker_rx.clone();
+            let worker_tx = worker_tx.clone();
+            std::thread::spawn(move || {
+                loop {
+                    let request = worker_rx.lock().expect("icon queue poisoned").recv();
+                    let Ok((path, pid)) = request else {
+                        break;
+                    };
+                    let icon = extract_icon(&path, pid);
+                    if worker_tx.send((path, icon)).is_err() {
+                        break;
+                    }
                 }
-            }
-        });
+            });
+        }
 
         let mut view = Self {
             page: Page::Processes,
@@ -292,7 +301,7 @@ impl Render for AppView {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let dialog_layer = gpui_component::Root::render_dialog_layer(window, cx);
         let page = match self.page {
-            Page::Processes => self.render_processes(cx),
+            Page::Processes => self.render_processes(window, cx),
             Page::Settings => self.render_settings(cx),
         };
 

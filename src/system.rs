@@ -149,7 +149,7 @@ pub fn format_memory(bytes: u64) -> String {
 
 #[cfg(target_os = "windows")]
 pub fn extract_icon(path: &std::path::Path, _: u32) -> Option<Arc<Image>> {
-    use std::{os::windows::process::CommandExt, process::Command};
+    use std::{os::windows::process::CommandExt, process::Command, sync::Mutex};
 
     use base64::{Engine as _, engine::general_purpose::STANDARD};
 
@@ -157,12 +157,16 @@ pub fn extract_icon(path: &std::path::Path, _: u32) -> Option<Arc<Image>> {
         return None;
     }
     let helper = std::env::temp_dir().join("process-killer-file-icon.exe");
-    if !helper.exists() {
-        std::fs::write(
-            &helper,
-            include_bytes!("../vendor/file-icon-x86_64-pc-windows-msvc.exe"),
-        )
-        .ok()?;
+    {
+        static HELPER_INIT: Mutex<()> = Mutex::new(());
+        let _guard = HELPER_INIT.lock().ok()?;
+        if !helper.exists() {
+            std::fs::write(
+                &helper,
+                include_bytes!("../vendor/file-icon-x86_64-pc-windows-msvc.exe"),
+            )
+            .ok()?;
+        }
     }
     let output = Command::new(helper)
         .arg(path)
@@ -179,20 +183,24 @@ pub fn extract_icon(path: &std::path::Path, _: u32) -> Option<Arc<Image>> {
 
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 pub fn extract_icon(_: &std::path::Path, pid: u32) -> Option<Arc<Image>> {
-    use std::{os::unix::fs::PermissionsExt, process::Command};
+    use std::{os::unix::fs::PermissionsExt, process::Command, sync::Mutex};
 
     use base64::{Engine as _, engine::general_purpose::STANDARD};
 
     let helper = std::env::temp_dir().join("process-killer-file-icon");
-    if !helper.exists() {
-        std::fs::write(
-            &helper,
-            include_bytes!("../vendor/file-icon-aarch64-apple-darwin"),
-        )
-        .ok()?;
-        let mut permissions = std::fs::metadata(&helper).ok()?.permissions();
-        permissions.set_mode(0o755);
-        std::fs::set_permissions(&helper, permissions).ok()?;
+    {
+        static HELPER_INIT: Mutex<()> = Mutex::new(());
+        let _guard = HELPER_INIT.lock().ok()?;
+        if !helper.exists() {
+            std::fs::write(
+                &helper,
+                include_bytes!("../vendor/file-icon-aarch64-apple-darwin"),
+            )
+            .ok()?;
+            let mut permissions = std::fs::metadata(&helper).ok()?.permissions();
+            permissions.set_mode(0o755);
+            std::fs::set_permissions(&helper, permissions).ok()?;
+        }
     }
     let request = format!(r#"[{{"appOrPID":"{pid}","size":64,"encode":true}}]"#);
     let output = Command::new(helper).arg(request).output().ok()?;
