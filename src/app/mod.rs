@@ -310,7 +310,6 @@ impl Render for AppView {
             .key_context("ProcessKiller")
             .track_focus(&self.search.focus_handle(cx))
             .size_full()
-            .p_2()
             .on_action(cx.listener(|this, _: &MoveUp, _, cx| this.move_active(-1, cx)))
             .on_action(cx.listener(|this, _: &MoveDown, _, cx| this.move_active(1, cx)))
             .on_action(
