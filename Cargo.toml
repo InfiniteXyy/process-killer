@@ -1,0 +1,20 @@
+[package]
+name = "process-killer"
+version = "0.1.0"
+edition = "2024"
+description = "A fast native process manager built with GPUI"
+license = "MIT"
+
+[dependencies]
+base64 = "0.22"
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui_platform = { git = "https://github.com/zed-industries/zed", features = ["font-kit"] }
+gpui-component = { git = "https://github.com/longbridge/gpui-component" }
+gpui-component-assets = { git = "https://github.com/longbridge/gpui-component" }
+netstat2 = "0.11"
+smol = "2"
+sysinfo = "0.31"
+
+[profile.release]
+lto = "thin"
+strip = true

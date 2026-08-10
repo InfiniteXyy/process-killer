@@ -1,27 +1,29 @@
-# React Template Lite
+# Process Killer
 
-## Main Stack
+一个使用 [GPUI](https://www.gpui.rs/) 和
+[gpui-component](https://github.com/longbridge/gpui-component) 编写的纯 Rust 进程管理器。
 
-- Framework: `React 18` `NextJS` `TypeScript`
-- CSS: `TailwindCSS` with `tailwind-iconify`
-- Lint & Format: `ESLint` + `Prettier`
-- DX: `unplugin-auto-imports`
+## 功能
 
-# Related
-icon related lib
-- https://github.com/ScienceVikings/IconExtractor
-- https://github.com/sindresorhus/file-icon
+- 按进程名或 PID 实时筛选
+- 使用 `:端口号` 筛选监听该端口的进程
+- 使用虚拟列表显示进程图标、CPU/内存占用率和本地网络端口
+- 鼠标点击或键盘上下键选择，回车确认结束进程
+- 中文/English、浅色/深色/跟随系统主题
+- 1、5、10、20 秒自动刷新间隔
+- 设置持久化，以及独立的设置页面
 
-# TODO
-- [x] make intro page
-- [x] a11y, keyboard support
-- [x] improve perf, virtual list?
-- [x] Support Exe Icons
-- [x] App Icon
-- [x] i18n
-- [ ] set revalidate interval
-- [ ] merge related processes
-- [ ] improve wix install experience
-- [ ] add license page
-- [ ] add ci, support window
-- [ ] multiple-selection
+## 开发
+
+只需要 Rust 工具链，不需要 Node.js、pnpm、TypeScript 或 WebView。
+
+```powershell
+cargo run
+```
+
+```powershell
+cargo test
+cargo build --release
+```
+
+发布产物是 `target/release/process-killer.exe`。Windows 进程图标提取器已内嵌进可执行文件。
