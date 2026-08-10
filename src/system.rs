@@ -206,17 +206,9 @@ pub fn extract_icon(_: &std::path::Path, pid: u32) -> Option<Arc<Image>> {
 
 #[cfg(all(target_os = "macos", not(target_arch = "aarch64")))]
 pub fn extract_icon(path: &std::path::Path, _: u32) -> Option<Arc<Image>> {
-    use std::process::Command;
+    use std::ffi::CString;
 
-    const SCRIPT: &str = r#"
-ObjC.import("AppKit");
-function run(argv) {
-    const image = $.NSWorkspace.sharedWorkspace.iconForFile(argv[0]);
-    const bitmap = $.NSBitmapImageRep.imageRepWithData(image.TIFFRepresentation);
-    const png = bitmap.representationUsingTypeProperties($.NSBitmapImageFileTypePNG, $());
-    $.NSFileHandle.fileHandleWithStandardOutput.writeData(png);
-}
-"#;
+    use objc::{class, msg_send, runtime::Object, sel, sel_impl};
 
     if path.as_os_str().is_empty() {
         return None;
@@ -225,16 +217,26 @@ function run(argv) {
         .ancestors()
         .find(|ancestor| ancestor.extension().is_some_and(|ext| ext == "app"))
         .unwrap_or(path);
-    let output = Command::new("osascript")
-        .args(["-l", "JavaScript", "-e", SCRIPT])
-        .arg("--")
-        .arg(icon_path)
-        .output()
-        .ok()?;
-    if !output.status.success() || output.stdout.is_empty() {
-        return None;
-    }
-    Some(Arc::new(Image::from_bytes(ImageFormat::Png, output.stdout)))
+    let icon_path = CString::new(icon_path.to_string_lossy().as_bytes()).ok()?;
+
+    let bytes = unsafe {
+        let pool: *mut Object = msg_send![class!(NSAutoreleasePool), new];
+        let path: *mut Object =
+            msg_send![class!(NSString), stringWithUTF8String: icon_path.as_ptr()];
+        let workspace: *mut Object = msg_send![class!(NSWorkspace), sharedWorkspace];
+        let image: *mut Object = msg_send![workspace, iconForFile: path];
+        let data: *mut Object = msg_send![image, TIFFRepresentation];
+        let bytes = if data.is_null() {
+            None
+        } else {
+            let length: usize = msg_send![data, length];
+            let pointer: *const u8 = msg_send![data, bytes];
+            (!pointer.is_null()).then(|| std::slice::from_raw_parts(pointer, length).to_vec())
+        };
+        let _: () = msg_send![pool, drain];
+        bytes
+    }?;
+    Some(Arc::new(Image::from_bytes(ImageFormat::Tiff, bytes)))
 }
 
 #[cfg(not(any(target_os = "windows", target_os = "macos")))]

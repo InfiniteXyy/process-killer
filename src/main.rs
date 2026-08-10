@@ -13,6 +13,7 @@ use gpui::*;
 fn main() {
     gpui_platform::application()
         .with_assets(gpui_component_assets::Assets)
+        .with_quit_mode(QuitMode::LastWindowClosed)
         .run(|cx| {
             gpui_component::init(cx);
             cx.bind_keys([
