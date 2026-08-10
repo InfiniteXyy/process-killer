@@ -4860,6 +4860,7 @@ name = "process-killer"
 version = "1.0.0"
 dependencies = [
  "base64",
+ "embed-resource",
  "gpui",
  "gpui-component",
  "gpui-component-assets",

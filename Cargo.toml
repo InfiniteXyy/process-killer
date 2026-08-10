@@ -18,6 +18,9 @@ sysinfo = "0.31"
 [target.'cfg(target_os = "macos")'.dependencies]
 objc = "0.2"
 
+[build-dependencies]
+embed-resource = "3"
+
 [profile.release]
 lto = "thin"
 strip = true
