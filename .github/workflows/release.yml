@@ -14,10 +14,10 @@ jobs:
       - run: cargo build --release --locked
       - name: Bundle as .app
         run: |
-          APP_DIR="ProcessKiller.app/Contents/MacOS"
-          mkdir -p "$APP_DIR"
-          cp target/release/process-killer "$APP_DIR/"
+          mkdir -p ProcessKiller.app/Contents/{MacOS,Resources}
+          cp target/release/process-killer ProcessKiller.app/Contents/MacOS/
           cp Info.plist ProcessKiller.app/Contents/
+          cp public/assets/icons/process-killer.icns ProcessKiller.app/Contents/Resources/
           echo "App bundle created: ProcessKiller.app"
       - name: Create archive
         run: zip -r ProcessKiller.app.zip ProcessKiller.app
