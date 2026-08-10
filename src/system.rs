@@ -177,7 +177,40 @@ pub fn extract_icon(path: &std::path::Path) -> Option<Arc<Image>> {
     Some(Arc::new(Image::from_bytes(ImageFormat::Png, bytes)))
 }
 
-#[cfg(not(target_os = "windows"))]
+#[cfg(target_os = "macos")]
+pub fn extract_icon(path: &std::path::Path) -> Option<Arc<Image>> {
+    use std::process::Command;
+
+    const SCRIPT: &str = r#"
+ObjC.import("AppKit");
+function run(argv) {
+    const image = $.NSWorkspace.sharedWorkspace.iconForFile(argv[0]);
+    const bitmap = $.NSBitmapImageRep.imageRepWithData(image.TIFFRepresentation);
+    const png = bitmap.representationUsingTypeProperties($.NSBitmapImageFileTypePNG, $());
+    $.NSFileHandle.fileHandleWithStandardOutput.writeData(png);
+}
+"#;
+
+    if path.as_os_str().is_empty() {
+        return None;
+    }
+    let icon_path = path
+        .ancestors()
+        .find(|ancestor| ancestor.extension().is_some_and(|ext| ext == "app"))
+        .unwrap_or(path);
+    let output = Command::new("osascript")
+        .args(["-l", "JavaScript", "-e", SCRIPT])
+        .arg("--")
+        .arg(icon_path)
+        .output()
+        .ok()?;
+    if !output.status.success() || output.stdout.is_empty() {
+        return None;
+    }
+    Some(Arc::new(Image::from_bytes(ImageFormat::Png, output.stdout)))
+}
+
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
 pub fn extract_icon(_: &std::path::Path) -> Option<Arc<Image>> {
     None
 }
