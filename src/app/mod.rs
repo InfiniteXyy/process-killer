@@ -47,7 +47,7 @@ pub struct AppView {
     scroll: UniformListScrollHandle,
     icons: HashMap<PathBuf, Arc<Image>>,
     requested_icons: HashSet<PathBuf>,
-    icon_tx: mpsc::Sender<PathBuf>,
+    icon_tx: mpsc::Sender<(PathBuf, u32)>,
     icon_rx: mpsc::Receiver<(PathBuf, Option<Arc<Image>>)>,
     last_refresh: Instant,
     _subscriptions: Vec<Subscription>,
@@ -66,11 +66,11 @@ impl AppView {
         });
         window.focus(&search.focus_handle(cx), cx);
 
-        let (icon_tx, worker_rx) = mpsc::channel::<PathBuf>();
+        let (icon_tx, worker_rx) = mpsc::channel::<(PathBuf, u32)>();
         let (worker_tx, icon_rx) = mpsc::channel();
         std::thread::spawn(move || {
-            for path in worker_rx {
-                let icon = extract_icon(&path);
+            for (path, pid) in worker_rx {
+                let icon = extract_icon(&path, pid);
                 if worker_tx.send((path, icon)).is_err() {
                     break;
                 }
@@ -159,12 +159,11 @@ impl AppView {
     fn refresh_processes(&mut self) {
         self.processes = self.source.collect();
         self.last_refresh = Instant::now();
-        for process in &self.processes {
-            if !process.exe.as_os_str().is_empty()
-                && self.requested_icons.insert(process.exe.clone())
-            {
-                let _ = self.icon_tx.send(process.exe.clone());
-            }
+    }
+
+    fn request_icon(&mut self, process: &ProcessInfo) {
+        if !process.exe.as_os_str().is_empty() && self.requested_icons.insert(process.exe.clone()) {
+            let _ = self.icon_tx.send((process.exe.clone(), process.pid));
         }
     }
 
