@@ -1,6 +1,6 @@
 use gpui::{prelude::FluentBuilder as _, *};
 use gpui_component::{
-    ActiveTheme, Icon, IconName, StyledExt,
+    ActiveTheme, Icon, IconName,
     button::{Button, ButtonVariants},
     h_flex,
     input::Input,
@@ -96,7 +96,11 @@ impl AppView {
                                         let process = processes[index].clone();
                                         this.request_icon(&process);
                                         let selected = index == active;
-                                        let icon = this.icons.get(&process.exe).cloned();
+                                        let icon = this
+                                            .icons
+                                            .get(&process.exe)
+                                            .unwrap_or(&this.default_icon)
+                                            .clone();
                                         let ports = process.ports.clone();
                                         let extra_ports = ports
                                             .iter()
@@ -131,31 +135,7 @@ impl AppView {
                                                     this.confirm_kill(process, window, cx)
                                                 });
                                             })
-                                            .child(match icon {
-                                                Some(icon) => img(icon)
-                                                    .size_6()
-                                                    .flex_shrink_0()
-                                                    .into_any_element(),
-                                                None => div()
-                                                    .size_6()
-                                                    .flex_shrink_0()
-                                                    .rounded_md()
-                                                    .bg(cx.theme().muted)
-                                                    .items_center()
-                                                    .justify_center()
-                                                    .text_xs()
-                                                    .font_semibold()
-                                                    .child(
-                                                        process
-                                                            .name
-                                                            .chars()
-                                                            .next()
-                                                            .unwrap_or('?')
-                                                            .to_uppercase()
-                                                            .to_string(),
-                                                    )
-                                                    .into_any_element(),
-                                            })
+                                            .child(img(icon).size_6().flex_shrink_0())
                                             .child(
                                                 h_flex()
                                                     .min_w_0()

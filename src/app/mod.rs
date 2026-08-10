@@ -20,6 +20,7 @@ use gpui_component::{
 use smol::Timer;
 
 use crate::{
+    default_file_icon::default_file_icon,
     settings::{Locale, Settings, ThemePreference},
     system::{
         ProcessInfo, ProcessSource, SortColumn, SortDirection, extract_icon, kill_process,
@@ -46,6 +47,7 @@ pub struct AppView {
     sort_direction: SortDirection,
     scroll: UniformListScrollHandle,
     icons: HashMap<PathBuf, Arc<Image>>,
+    default_icon: Arc<Image>,
     requested_icons: HashSet<PathBuf>,
     icon_tx: mpsc::Sender<(PathBuf, u32)>,
     icon_rx: mpsc::Receiver<(PathBuf, Option<Arc<Image>>)>,
@@ -88,6 +90,7 @@ impl AppView {
             sort_direction: SortDirection::Ascending,
             scroll: UniformListScrollHandle::new(),
             icons: HashMap::new(),
+            default_icon: default_file_icon(),
             requested_icons: HashSet::new(),
             icon_tx,
             icon_rx,

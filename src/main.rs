@@ -4,6 +4,7 @@
 )]
 
 mod app;
+mod default_file_icon;
 mod settings;
 mod system;
 
