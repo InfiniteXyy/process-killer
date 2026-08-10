@@ -26,3 +26,7 @@ cargo test
 cargo build --release
 ```
 
+## 落地页
+
+直接打开 `public/index.html` 即可预览。推送到 `main` 后由 GitHub Actions 自动发布到 GitHub Pages。
+

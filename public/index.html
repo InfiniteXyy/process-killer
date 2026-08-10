@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Process Killer 是一款轻量、快速的 Windows 与 macOS 原生进程管理器。"
+    />
+    <title>Process Killer — 快速找到并结束进程</title>
+    <link rel="icon" href="assets/icons/process-killer.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="assets/icons/process-killer-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="nav shell">
+      <a class="brand" href="#" aria-label="Process Killer 首页">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+        <span>Process Killer</span>
+      </a>
+      <a
+        class="github-link"
+        href="https://github.com/InfiniteXyy/process-killer"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.74-1.56-2.57-.3-5.27-1.29-5.27-5.69 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.16 1.18a10.92 10.92 0 0 1 5.75 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.42-2.71 5.39-5.29 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
+        </svg>
+        GitHub
+      </a>
+    </header>
+
+    <main>
+      <section class="hero shell">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span>轻量 · 原生 · 开源</div>
+          <h1>结束进程，<br /><em>快一点。</em></h1>
+          <p class="lead">
+            按名称、PID 或端口快速定位进程，一次确认即可结束。没有冗余功能，只有你需要的信息。
+          </p>
+          <div class="downloads" aria-label="下载 Process Killer">
+            <a
+              class="download primary"
+              href="https://github.com/InfiniteXyy/process-killer/releases/latest/download/process-killer.exe"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 4.6 10.4 3v8H3V4.6Zm8.3-1.8L21 1v10h-9.7V2.8ZM3 11.9h7.4v8L3 18.3v-6.4Zm8.3 0H21v10l-9.7-1.8v-8.2Z" />
+              </svg>
+              <span><small>下载适用于</small>Windows</span>
+            </a>
+            <a
+              class="download secondary"
+              href="https://github.com/InfiniteXyy/process-killer/releases/latest/download/process-killer"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M17.05 12.54c.02-2.15 1.76-3.18 1.84-3.23a3.96 3.96 0 0 0-3.12-1.69c-1.31-.14-2.59.79-3.26.79-.69 0-1.72-.77-2.84-.75a4.12 4.12 0 0 0-3.48 2.12c-1.51 2.61-.38 6.45 1.06 8.56.72 1.03 1.56 2.18 2.68 2.14 1.09-.05 1.5-.69 2.81-.69 1.3 0 1.68.69 2.82.66 1.17-.02 1.91-1.04 2.6-2.08a8.53 8.53 0 0 0 1.2-2.45 3.71 3.71 0 0 1-2.31-3.38ZM14.92 6.23a3.77 3.77 0 0 0 .87-2.72 3.85 3.85 0 0 0-2.52 1.29 3.59 3.59 0 0 0-.89 2.62 3.2 3.2 0 0 0 2.54-1.19Z" />
+              </svg>
+              <span><small>下载适用于</small>macOS</span>
+            </a>
+          </div>
+          <p class="download-note">免费开源 · 无需安装 · MIT License</p>
+        </div>
+
+        <div class="app-preview" aria-label="Process Killer 应用界面预览">
+          <div class="window-bar">
+            <span>Process Killer</span>
+            <b aria-hidden="true">×</b>
+          </div>
+          <div class="app-body">
+            <div class="search"><span aria-hidden="true"></span>输入进程名/PID，或输入 :端口号<b>⌘ K</b></div>
+            <div class="table-head">
+              <span>进程 (84) ↑</span><span>端口</span><span>CPU</span><span>内存</span>
+            </div>
+            <div class="process active">
+              <i class="app-icon chrome"></i><strong>Google Chrome</strong><small>8420</small><span>:9222</span><span class="hot">24.8%</span><span>1.2 GB</span>
+            </div>
+            <div class="process">
+              <i class="app-icon code"></i><strong>Visual Studio Code</strong><small>11532</small><span>:5173</span><span>6.4%</span><span>486 MB</span>
+            </div>
+            <div class="process">
+              <i class="app-icon terminal">›_</i><strong>Terminal</strong><small>6204</small><span>:3000</span><span>1.2%</span><span>92 MB</span>
+            </div>
+            <div class="process muted-row">
+              <i class="app-icon rust">R</i><strong>process-killer</strong><small>13884</small><span>—</span><span>0.3%</span><span>28 MB</span>
+            </div>
+          </div>
+          <div class="preview-glow"></div>
+        </div>
+      </section>
+
+      <section class="features shell" aria-label="功能">
+        <article>
+          <span class="number">01</span>
+          <h2>找得准</h2>
+          <p>搜索进程名称、PID，输入 <code>:3000</code> 还能直接定位占用端口的进程。</p>
+        </article>
+        <article>
+          <span class="number">02</span>
+          <h2>看得清</h2>
+          <p>CPU、内存和本地端口一目了然，支持按任意列升降排序。</p>
+        </article>
+        <article>
+          <span class="number">03</span>
+          <h2>用得快</h2>
+          <p>原生 Rust 应用，键盘即可完成选择与确认，Windows 和 macOS 都能用。</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="shell">
+      <a class="brand footer-brand" href="#">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+        <span>Process Killer</span>
+      </a>
+      <p>Built with Rust &amp; GPUI.</p>
+      <a href="https://github.com/InfiniteXyy/process-killer/blob/main/LICENSE">MIT License ↗</a>
+    </footer>
+  </body>
+</html>
