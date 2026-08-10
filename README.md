@@ -17,8 +17,6 @@
 
 ## 开发
 
-只需要 Rust 工具链，不需要 Node.js、pnpm、TypeScript 或 WebView。
-
 ```powershell
 cargo run
 ```
@@ -28,4 +26,3 @@ cargo test
 cargo build --release
 ```
 
-发布产物是 `target/release/process-killer.exe`。Windows 进程图标提取器已内嵌进可执行文件。
