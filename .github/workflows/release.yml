@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "app-v*"
+      - "v*"
 
 jobs:
   macos:
