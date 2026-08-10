@@ -4,6 +4,29 @@ use gpui::{Image, ImageFormat};
 use netstat2::{AddressFamilyFlags, ProtocolFlags, ProtocolSocketInfo, get_sockets_info};
 use sysinfo::{Pid, ProcessRefreshKind, RefreshKind, System};
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SortColumn {
+    Process,
+    Ports,
+    Cpu,
+    Memory,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SortDirection {
+    Ascending,
+    Descending,
+}
+
+impl SortDirection {
+    pub fn reversed(self) -> Self {
+        match self {
+            Self::Ascending => Self::Descending,
+            Self::Descending => Self::Ascending,
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct ProcessInfo {
     pub pid: u32,
@@ -76,7 +99,7 @@ pub fn kill_process(pid: u32) -> bool {
 }
 
 pub fn matches_filter(process: &ProcessInfo, query: &str) -> bool {
-    if let Some(port) = query.strip_prefix(':') {
+    if let Some(port) = query.strip_prefix(':').or_else(|| query.strip_prefix('：')) {
         return process
             .ports
             .iter()
@@ -84,6 +107,34 @@ pub fn matches_filter(process: &ProcessInfo, query: &str) -> bool {
     }
     let query = query.to_lowercase();
     process.name.to_lowercase().contains(&query) || process.pid.to_string().contains(&query)
+}
+
+pub fn sort_processes(processes: &mut [ProcessInfo], column: SortColumn, direction: SortDirection) {
+    use std::cmp::Ordering;
+
+    processes.sort_by(|left, right| {
+        let order = match column {
+            SortColumn::Process => left.name.to_lowercase().cmp(&right.name.to_lowercase()),
+            SortColumn::Ports => match (left.ports.first(), right.ports.first()) {
+                (Some(left), Some(right)) => left.cmp(right),
+                (Some(_), None) => Ordering::Less,
+                (None, Some(_)) => Ordering::Greater,
+                (None, None) => Ordering::Equal,
+            },
+            SortColumn::Cpu => left.cpu_usage.total_cmp(&right.cpu_usage),
+            SortColumn::Memory => left.memory_bytes.cmp(&right.memory_bytes),
+        };
+        let order = if direction == SortDirection::Descending
+            && !(column == SortColumn::Ports && (left.ports.is_empty() || right.ports.is_empty()))
+        {
+            order.reverse()
+        } else {
+            order
+        };
+        order
+            .then_with(|| left.name.to_lowercase().cmp(&right.name.to_lowercase()))
+            .then_with(|| left.pid.cmp(&right.pid))
+    });
 }
 
 pub fn format_memory(bytes: u64) -> String {
@@ -152,8 +203,39 @@ mod tests {
         assert!(matches_filter(&process, "devserver"));
         assert!(matches_filter(&process, "424"));
         assert!(matches_filter(&process, ":173"));
+        assert!(matches_filter(&process, "：173"));
         assert!(!matches_filter(&process, ":8080"));
         assert_eq!(format_memory(process.memory_bytes), "128.0 MB");
         assert_eq!(format_memory(3 * 1024 * 1024 * 1024), "3.0 GB");
+    }
+
+    #[test]
+    fn sorts_columns_and_keeps_missing_ports_last() {
+        let mut first = process();
+        first.name = "Alpha".into();
+        first.cpu_usage = 8.0;
+        first.memory_bytes = 300;
+        first.ports = vec![5173];
+
+        let mut second = process();
+        second.pid = 7;
+        second.name = "Beta".into();
+        second.cpu_usage = 2.0;
+        second.memory_bytes = 900;
+        second.ports.clear();
+
+        let mut processes = vec![first, second];
+        sort_processes(&mut processes, SortColumn::Cpu, SortDirection::Ascending);
+        assert_eq!(processes[0].name, "Beta");
+
+        sort_processes(
+            &mut processes,
+            SortColumn::Memory,
+            SortDirection::Descending,
+        );
+        assert_eq!(processes[0].name, "Beta");
+
+        sort_processes(&mut processes, SortColumn::Ports, SortDirection::Descending);
+        assert_eq!(processes[0].name, "Alpha");
     }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "process-killer"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
 description = "A fast native process manager built with GPUI"
 license = "MIT"
