@@ -1,19 +1,33 @@
-name: build
+name: Release
+
 on:
   push:
-    branches:
-      - release
-  pull_request:
+    tags:
+      - "app-v*"
 
 jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release --locked
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/release/process-killer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test --locked
       - run: cargo build --release --locked
-      - uses: actions/upload-artifact@v4
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: process-killer-windows
-          path: target/release/process-killer.exe
+          files: target/release/process-killer.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
