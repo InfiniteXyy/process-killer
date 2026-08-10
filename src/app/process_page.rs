@@ -21,13 +21,11 @@ impl AppView {
         let processes = self.filtered(cx);
         let count = processes.len();
         let active = self.active.min(count.saturating_sub(1));
-        let search_focused = self.search.focus_handle(cx).is_focused(window);
         self.active = active;
         let view = cx.entity();
 
         v_flex()
             .size_full()
-            .p_3()
             .gap_2()
             .child(
                 h_flex()
@@ -60,6 +58,7 @@ impl AppView {
                 h_flex()
                     .w_full()
                     .h(px(30.))
+                    .px_3()
                     .gap_1()
                     .text_xs()
                     .rounded_lg()
@@ -221,6 +220,7 @@ impl AppView {
                             }),
                         )
                         .size_full()
+                        .px_3()
                         .track_scroll(&self.scroll),
                     )
                     .vertical_scrollbar(&self.scroll),
